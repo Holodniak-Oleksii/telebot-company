@@ -8,8 +8,12 @@
   ],
   "routes": [
     {
+      "src": "/socket.io/(.*)",
+      "dest": "/your-entry-file.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/"
+      "dest": "/your-entry-file.js"
     }
   ]
 }
