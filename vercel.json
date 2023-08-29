@@ -9,11 +9,11 @@
   "routes": [
     {
       "src": "/socket.io/(.*)",
-      "dest": "/your-entry-file.js"
+      "dest": "/index.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/your-entry-file.js"
+      "dest": "/index.js"
     }
   ]
 }
