@@ -6,7 +6,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 const TelegramAPI = require("node-telegram-bot-api");
-
+const decrypted = require("./helpers");
 const app = express();
 const bot = new TelegramAPI(process.env.TOKEN_API, { polling: true });
 
@@ -25,7 +25,7 @@ const contactIO = io.of("contact");
 async function start() {
   try {
     bot.on("message", (message) => {
-      const userId = message.reply_to_message?.text?.split(" ")[5];
+      const userId = message.reply_to_message?.text?.split(" ")[2];
 
       if (userId) {
         contactIO.to(userId).emit("receive_message", {
@@ -36,14 +36,16 @@ async function start() {
     });
 
     contactIO.on("connection", (socket) => {
+      let socketRoom = "";
       socket.on("join_room", (data) => {
-        socket.join(data);
+        socketRoom = decrypted(data);
+        socket.join(socketRoom);
       });
 
       socket.on("send_message", async (data) => {
         bot.sendMessage(
           process.env.CHAT_ID,
-          `💬 Message from the user ${data.room} : ${data.message}`
+          `💬 User ${socketRoom} send message : ${data.message}`
         );
       });
     });
